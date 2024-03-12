@@ -48,14 +48,14 @@ yarn start
 ```
 The application should now be running on http://localhost:3000.
 
-# Running the tests
+## Running Tests
 I am using Jest for unit tests. You can run the tests via the following command:
 
 ```bash
 yarn test
 ```
 
-# Built With
-- React - The web framework used
-- Create React App - Used to bootstrap the development
-- Ant Design - UI framework for React components
+## Built With
+- React JS
+- Create React App for bootstrapping
+- Ant Design for UI
