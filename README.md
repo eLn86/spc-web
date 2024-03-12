@@ -49,7 +49,7 @@ yarn start
 The application should now be running on http://localhost:3000.
 
 # Running the tests
-Explain how to run the automated tests for this system (if applicable).
+I am using Jest for unit tests. You can run the tests via the following command:
 
 ```bash
 yarn test
