@@ -17,6 +17,7 @@ const App = () => {
     const contentStyle = {
         textAlign: 'center',
         height: 'auto',
+        width: '100%',
         lineHeight: '120px',
         position: 'absolute',
         top: '64px',
