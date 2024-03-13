@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import App from './App';
 
-describe('Main page text', () => {
+describe('App layout text', () => {
   test('renders header text', () => {
     render(<App />);
     const headerText = screen.getByText(/scrabble points calculator deluxe/i);
