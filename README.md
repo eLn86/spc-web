@@ -25,7 +25,6 @@ Please adhere to the package versions below (Prerequisites) to avoid any issues 
 - Node.js v19.0.0
 - npm v8.19.2
 - yarn 4.1.1 (with corepack enabled)
-- React v18.2.0
 
 ### Installation
 
@@ -57,5 +56,6 @@ yarn test
 
 ## Built With
 - React JS
+- Axios for API calls
 - Create React App for bootstrapping
 - Ant Design for UI
