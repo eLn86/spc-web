@@ -1,5 +1,4 @@
 import axios from 'axios';
-import { WordNotFoundError } from "../errorHandling";
 
 export const DICTIONARY_API_URL = 'https://api.dictionaryapi.dev/api/v2/entries/en';
 
