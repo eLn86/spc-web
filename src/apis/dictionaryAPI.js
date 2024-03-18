@@ -4,8 +4,7 @@ export const DICTIONARY_API_URL = 'https://api.dictionaryapi.dev/api/v2/entries/
 
 export const checkIfValidWord = async (word) => {
     try {
-        const result = await axios.get(`${DICTIONARY_API_URL}/${word}`);
-        return result;
+        return await axios.get(`${DICTIONARY_API_URL}/${word}`);
     } catch(error) {
         const { code, response } = error;
         if (code === 'ERR_BAD_REQUEST' && response.status === 404) {
