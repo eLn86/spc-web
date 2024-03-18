@@ -11,10 +11,11 @@ Read more [here](https://trunkbaseddevelopment.com/).
 
 - Enter any English word from 1-10 characters
 - Get scrabble score based on word entered
-- Save score
+- Save your score
 - Reset tiles
 - View top 10 scores
-- Validate if your word is an English word
+- Validate if your word is an English word and if it is not, score is not calculated
+- If your word scores in the top ten, you will see a banner that informs you that your word has scored in the top ten and advises you to save
 
 ## Getting Started
 
@@ -59,3 +60,4 @@ yarn test
 - Axios for API calls
 - Create React App for bootstrapping
 - Ant Design for UI
+- Free dictionary API (https://dictionaryapi.dev/)
