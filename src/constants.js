@@ -26,3 +26,8 @@ export const ALPHABET_SCORE_MAP = {
     Y: 4,
     Z: 10
 };
+
+export const HTTPSTATUS = {
+    OK: 200,
+    NOTFOUND: 404
+}
