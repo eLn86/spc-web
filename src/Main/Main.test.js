@@ -3,6 +3,7 @@ jest.mock("../apis/dictionaryAPI");
 
 import { act, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import Main from './Main';
+import { HTTPSTATUS } from "../constants";
 
 jest.mock('axios');
 describe('main page text and elements', () => {
@@ -26,7 +27,7 @@ describe('main page text and elements', () => {
 
     test('Renders reset button and text', () => {
         render(<Main />);
-        const resetButton = screen.getByTestId('reset-button');
+        const resetButton = screen.getByTestId('reset-tiles-btn');
         const resetTilesText = screen.getByText(/reset tiles/i);
         expect(resetButton).toBeInTheDocument();
         expect(resetTilesText).toBeInTheDocument();
@@ -52,7 +53,7 @@ describe('main page text and elements', () => {
 describe('input behaviour, logic and error text', () => {
     test('calls checkIfValidWord function on input change after debounce time of 0.5s', async () => {
         jest.useFakeTimers();
-        dictionaryAPI.checkIfValidWord.mockResolvedValue({ status: 200 });
+        dictionaryAPI.checkIfValidWord.mockResolvedValue({ status: HTTPSTATUS.OK });
         render(<Main/>);
 
         // Simulate typing in input field and waits for timeout callback to execute before considering cycle as completed with act()
@@ -67,7 +68,7 @@ describe('input behaviour, logic and error text', () => {
 
     test('that checkIfValidWord function is not called if word is empty string', async () => {
         jest.useFakeTimers();
-        dictionaryAPI.checkIfValidWord.mockResolvedValue({ status: 200 });
+        dictionaryAPI.checkIfValidWord.mockResolvedValue({ status: HTTPSTATUS.OK });
         render(<Main/>);
 
         // Simulate typing in input field and waits for timeout callback to execute before considering cycle as completed with act()
@@ -82,7 +83,7 @@ describe('input behaviour, logic and error text', () => {
 
     test('that input has red border when word is invalid', async () => {
         jest.useFakeTimers();
-        dictionaryAPI.checkIfValidWord.mockResolvedValue({ status: 404 });
+        dictionaryAPI.checkIfValidWord.mockResolvedValue({ status: HTTPSTATUS.NOTFOUND });
         render(<Main/>);
 
         const inputField = screen.getByTestId('input-field');
@@ -101,7 +102,7 @@ describe('input behaviour, logic and error text', () => {
 
     test('that error text displays below input when word is invalid', async () => {
         jest.useFakeTimers();
-        dictionaryAPI.checkIfValidWord.mockResolvedValue({ status: 404 });
+        dictionaryAPI.checkIfValidWord.mockResolvedValue({ status: HTTPSTATUS.NOTFOUND });
         render(<Main/>);
 
         const inputField = screen.getByTestId('input-field');
@@ -122,7 +123,7 @@ describe('input behaviour, logic and error text', () => {
 describe('scoring', () => {
     test('score is N/A when word is empty string', async () => {
         jest.useFakeTimers();
-        dictionaryAPI.checkIfValidWord.mockResolvedValue({ status: 200 });
+        dictionaryAPI.checkIfValidWord.mockResolvedValue({ status: HTTPSTATUS.OK });
         render(<Main/>);
 
         // Simulate typing in input field and waits for timeout callback to execute before considering cycle as completed with act()
@@ -139,7 +140,7 @@ describe('scoring', () => {
 
     test('score is N/A when word is invalid', async () => {
         jest.useFakeTimers();
-        dictionaryAPI.checkIfValidWord.mockResolvedValue({ status: 404 });
+        dictionaryAPI.checkIfValidWord.mockResolvedValue({ status: HTTPSTATUS.NOTFOUND });
         render(<Main/>);
 
         // Simulate typing in input field and waits for timeout callback to execute before considering cycle as completed with act()
@@ -156,7 +157,7 @@ describe('scoring', () => {
 
     test('to give an accurate scoring of the word ambiguity (17 points)', async () => {
         jest.useFakeTimers();
-        dictionaryAPI.checkIfValidWord.mockResolvedValue({ status: 200 });
+        dictionaryAPI.checkIfValidWord.mockResolvedValue({ status: HTTPSTATUS.OK });
         render(<Main/>);
 
         // Simulate typing in input field and waits for timeout callback to execute before considering cycle as completed with act()
@@ -175,7 +176,7 @@ describe('scoring', () => {
 describe('button behaviours', () => {
     test('reset tiles resets the score and value and error text', async () => {
         jest.useFakeTimers();
-        dictionaryAPI.checkIfValidWord.mockResolvedValue({ status: 200 });
+        dictionaryAPI.checkIfValidWord.mockResolvedValue({ status: HTTPSTATUS.OK });
         render(<Main/>);
 
         const inputField = screen.getByTestId('input-field');

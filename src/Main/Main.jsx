@@ -1,7 +1,7 @@
 import { Button, Card, Flex, Input, Typography } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { checkIfValidWord } from "../apis/dictionaryAPI";
-import { ALPHABET_SCORE_MAP } from "../constants";
+import { ALPHABET_SCORE_MAP, HTTPSTATUS } from "../constants";
 
 const { Text } = Typography;
 
@@ -16,7 +16,7 @@ const Main = () => {
             if ((value && value.length <= 10)) {
                 const response = await checkIfValidWord(value);
                 const { status } = response;
-                if (status === 404) {
+                if (status === HTTPSTATUS.NOTFOUND) {
                     setIsInvalidWord(true);
                     setScore(0);
                 } else {
