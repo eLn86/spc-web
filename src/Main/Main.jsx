@@ -74,6 +74,13 @@ const Main = () => {
         alignItems: 'center'
     }
 
+    const scoreTextStyle = {
+        fontSize: '24px',
+        margin: '20px 0px',
+        fontWeight: 'bold',
+        color: '#967BB6'
+    }
+
     return (
         <Flex style={containerStyle}>
             <Flex style={tilesWrapperStyle}>
@@ -97,7 +104,9 @@ const Main = () => {
                 </Flex>
             </Flex>
 
-            <Flex data-testid={'score'}>Score: {score && score || 'N/A'}</Flex>
+            <Flex data-testid={'score'}>
+                <Text style={scoreTextStyle}>Score: {score && score || 'N/A'}</Text>
+            </Flex>
             <Flex gap={'large'}>
                 <Button
                     onClick={() => {
