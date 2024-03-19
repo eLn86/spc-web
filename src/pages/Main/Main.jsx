@@ -38,13 +38,6 @@ const Main = () => {
         return word.split('').reduce((acc, letter) => acc + ALPHABET_SCORE_MAP[letter.toUpperCase()], 0);
     }
 
-    const containerStyle = {
-        flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: 'center',
-        height: '800px',
-        width: '100%'
-    }
     const tilesWrapperStyle = {
         flexDirection: 'column',
         alignItems: 'center',
