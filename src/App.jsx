@@ -94,7 +94,7 @@ const App = () => {
               <div className="star"></div>
               <div className="star"></div>
           </div>
-
+          <Flex wrap="wrap">
               <Layout style={layoutStyle}>
                   <Header style={headerStyle}>Scrabble Points Calculator Deluxe</Header>
                   <Content style={contentStyle}>
@@ -102,7 +102,7 @@ const App = () => {
                   </Content>
                   <Footer style={footerStyle}>Cognizant Gobiz Technical Challenge March 2024</Footer>
               </Layout>
-
+          </Flex>
       </>
   );
 }
