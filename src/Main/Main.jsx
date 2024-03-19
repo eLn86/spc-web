@@ -88,7 +88,7 @@ const Main = () => {
                     value={value}
                     maxLength={10}
                     style={isInvalidWord ? inputErrorStyle : inputStyle}
-                    placeholder={'Type a word'}
+                    placeholder={'Score will only be computed when you type a valid word'}
                     onChange={e => setValue(e.target.value)}
                     data-testid='input-field'
                 />
