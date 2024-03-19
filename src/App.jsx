@@ -41,15 +41,69 @@ const App = () => {
         height: '100%'
     };
   return (
-      <Flex wrap="wrap">
-          <Layout style={layoutStyle}>
-              <Header style={headerStyle}>Scrabble Points Calculator Deluxe</Header>
-              <Content style={contentStyle}>
-                <Main/>
-              </Content>
-              <Footer style={footerStyle}>Cognizant Gobiz Technical Challenge March 2024</Footer>
-          </Layout>
-      </Flex>
+      <>
+          <div className="stars">
+              <div className="star"></div>
+              <div className="star"></div>
+              <div className="star"></div>
+              <div className="star"></div>
+              <div className="star"></div>
+              <div className="star"></div>
+              <div className="star"></div>
+              <div className="star"></div>
+              <div className="star"></div>
+              <div className="star"></div>
+              <div className="star"></div>
+              <div className="star"></div>
+              <div className="star"></div>
+              <div className="star"></div>
+              <div className="star"></div>
+              <div className="star"></div>
+              <div className="star"></div>
+              <div className="star"></div>
+              <div className="star"></div>
+              <div className="star"></div>
+              <div className="star"></div>
+              <div className="star"></div>
+              <div className="star"></div>
+              <div className="star"></div>
+              <div className="star"></div>
+              <div className="star"></div>
+              <div className="star"></div>
+              <div className="star"></div>
+              <div className="star"></div>
+              <div className="star"></div>
+              <div className="star"></div>
+              <div className="star"></div>
+              <div className="star"></div>
+              <div className="star"></div>
+              <div className="star"></div>
+              <div className="star"></div>
+              <div className="star"></div>
+              <div className="star"></div>
+              <div className="star"></div>
+              <div className="star"></div>
+              <div className="star"></div>
+              <div className="star"></div>
+              <div className="star"></div>
+              <div className="star"></div>
+              <div className="star"></div>
+              <div className="star"></div>
+              <div className="star"></div>
+              <div className="star"></div>
+              <div className="star"></div>
+              <div className="star"></div>
+          </div>
+
+              <Layout style={layoutStyle}>
+                  <Header style={headerStyle}>Scrabble Points Calculator Deluxe</Header>
+                  <Content style={contentStyle}>
+                      <Main/>
+                  </Content>
+                  <Footer style={footerStyle}>Cognizant Gobiz Technical Challenge March 2024</Footer>
+              </Layout>
+
+      </>
   );
 }
 
