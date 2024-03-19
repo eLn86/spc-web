@@ -1,9 +1,9 @@
-import * as dictionaryAPI from "../apis/dictionaryAPI";
-jest.mock("../apis/dictionaryAPI");
+import * as dictionaryAPI from "../../apis/dictionaryAPI";
+jest.mock("../../apis/dictionaryAPI");
 
 import { act, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import Main from './Main';
-import { HTTPSTATUS } from "../constants";
+import { HTTPSTATUS } from "../../constants";
 
 jest.mock('axios');
 describe('main page text and elements', () => {

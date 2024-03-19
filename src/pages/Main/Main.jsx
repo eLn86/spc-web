@@ -1,7 +1,8 @@
 import { Button, Card, Flex, Input, Typography } from 'antd';
 import React, { useEffect, useState } from 'react';
-import { checkIfValidWord } from "../apis/dictionaryAPI";
-import { ALPHABET_SCORE_MAP, HTTPSTATUS } from "../constants";
+import { checkIfValidWord } from "../../apis/dictionaryAPI";
+import { ALPHABET_SCORE_MAP, HTTPSTATUS } from "../../constants";
+import PageWrapper from "../../components/PageWrapper";
 
 const { Text } = Typography;
 
@@ -82,7 +83,7 @@ const Main = () => {
     }
 
     return (
-        <Flex style={containerStyle}>
+        <PageWrapper>
             <Flex style={tilesWrapperStyle}>
                 <Input
                     value={value}
@@ -122,7 +123,7 @@ const Main = () => {
                 <Button data-testid='save-button' type="primary" size={'large'}>Save Score</Button>
                 <Button data-testid='view-topscores-button' type="primary" size={'large'}>View Top Scores</Button>
             </Flex>
-        </Flex>
+        </PageWrapper>
     )
 }
 
