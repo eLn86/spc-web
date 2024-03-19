@@ -7,7 +7,7 @@
       "^.+\\.[j]sx?$": "babel-jest"
     },
     "transformIgnorePatterns": [
-      "node_modules/(?!@elnathan)/"
+      "^(?!<rootDir>)"
     ]
   },
   "dependencies": {
