@@ -1,6 +1,10 @@
 import './App.css';
-import { Layout, Flex } from 'antd';
-import Main from "./Main/Main";
+import { Flex, Layout } from 'antd';
+import Main from "./pages/Main/Main";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import React from "react";
+import StarsAnimation from "./components/StarsAnimation/StarsAnimation";
+import TopScores from "./pages/TopScores/TopScores";
 
 const { Header, Footer, Content } = Layout;
 const App = () => {
@@ -40,71 +44,26 @@ const App = () => {
         width: '100%',
         height: '100%'
     };
-  return (
-      <>
-          <div className="stars">
-              <div className="star"></div>
-              <div className="star"></div>
-              <div className="star"></div>
-              <div className="star"></div>
-              <div className="star"></div>
-              <div className="star"></div>
-              <div className="star"></div>
-              <div className="star"></div>
-              <div className="star"></div>
-              <div className="star"></div>
-              <div className="star"></div>
-              <div className="star"></div>
-              <div className="star"></div>
-              <div className="star"></div>
-              <div className="star"></div>
-              <div className="star"></div>
-              <div className="star"></div>
-              <div className="star"></div>
-              <div className="star"></div>
-              <div className="star"></div>
-              <div className="star"></div>
-              <div className="star"></div>
-              <div className="star"></div>
-              <div className="star"></div>
-              <div className="star"></div>
-              <div className="star"></div>
-              <div className="star"></div>
-              <div className="star"></div>
-              <div className="star"></div>
-              <div className="star"></div>
-              <div className="star"></div>
-              <div className="star"></div>
-              <div className="star"></div>
-              <div className="star"></div>
-              <div className="star"></div>
-              <div className="star"></div>
-              <div className="star"></div>
-              <div className="star"></div>
-              <div className="star"></div>
-              <div className="star"></div>
-              <div className="star"></div>
-              <div className="star"></div>
-              <div className="star"></div>
-              <div className="star"></div>
-              <div className="star"></div>
-              <div className="star"></div>
-              <div className="star"></div>
-              <div className="star"></div>
-              <div className="star"></div>
-              <div className="star"></div>
-          </div>
-          <Flex wrap="wrap">
-              <Layout style={layoutStyle}>
-                  <Header style={headerStyle}>Scrabble Points Calculator Deluxe</Header>
-                  <Content style={contentStyle}>
-                      <Main/>
-                  </Content>
-                  <Footer style={footerStyle}>Cognizant Gobiz Technical Challenge March 2024</Footer>
-              </Layout>
-          </Flex>
-      </>
-  );
+    return (
+        <>
+            <StarsAnimation/>
+            <Flex wrap="wrap">
+                <Layout style={layoutStyle}>
+                    <Header style={headerStyle}>Scrabble Points Calculator Deluxe</Header>
+                    <Content style={contentStyle}>
+                        <Router>
+                            <Routes>
+                                <Route path='/' element={<Main/>}/>
+                                <Route path='/top-scores' element={<TopScores/>}/>
+                            </Routes>
+                        </Router>
+                        <Main/>
+                    </Content>
+                    <Footer style={footerStyle}>Cognizant Gobiz Technical Challenge March 2024</Footer>
+                </Layout>
+            </Flex>
+        </>
+    );
 }
 
 export default App;
