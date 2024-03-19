@@ -31,3 +31,7 @@ export const HTTPSTATUS = {
     OK: 200,
     NOTFOUND: 404
 }
+
+export const TABLE_ROLES = {
+    COLUMN_HEADER: 'columnheader'
+}
