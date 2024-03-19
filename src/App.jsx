@@ -57,7 +57,6 @@ const App = () => {
                                 <Route path='/top-scores' element={<TopScores/>}/>
                             </Routes>
                         </Router>
-                        <Main/>
                     </Content>
                     <Footer style={footerStyle}>Cognizant Gobiz Technical Challenge March 2024</Footer>
                 </Layout>
