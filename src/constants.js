@@ -35,3 +35,11 @@ export const HTTPSTATUS = {
 export const TABLE_ROLES = {
     COLUMN_HEADER: 'columnheader'
 }
+
+export const LABELS = {
+    WELCOME_TEXT: 'Welcome! Please type a word in the field below to begin!',
+    WORD_INPUT_PLACEHOLDER_TEXT: 'Score will only be computed when you type a valid word',
+    SCORE_SAVED_TEXT: 'Your score has been saved!',
+    WORD_INVALID_TEXT: 'The word you typed is invalid, please try another word!',
+    TOP_TEN_SCORES_TITLE: 'Top 10 Scores'
+}
