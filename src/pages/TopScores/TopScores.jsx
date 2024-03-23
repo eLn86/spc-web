@@ -101,11 +101,6 @@ const TopScores = () => {
         cursor: 'pointer'
     }
 
-    const backHomeTextStyle = {
-        display: 'flex',
-        alignItems: 'center'
-    }
-
     const topTenScoresTextStyle = {
         display: 'flex',
         justifyContent: 'center',
