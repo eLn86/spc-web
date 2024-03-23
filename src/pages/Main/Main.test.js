@@ -1,19 +1,16 @@
 import '../../setupDomTests';
 import * as dictionaryAPI from "../../apis/dictionaryAPI";
 import * as scoresAPI from "../../apis/scoresAPI";
-jest.mock("../../apis/dictionaryAPI");
-jest.mock("../../apis/scoresAPI");
-
-
 import { act, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import Main from './Main';
 import { HTTPSTATUS } from "../../constants";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
 import TopScores from "../TopScores/TopScores";
 import React from "react";
-import axios from "axios";
-import { saveScore } from "../../apis/scoresAPI";
-import { checkIfValidWord, DICTIONARY_API_URL } from "../../apis/dictionaryAPI";
+
+jest.mock("../../apis/dictionaryAPI");
+jest.mock("../../apis/scoresAPI");
+
 
 jest.mock('axios');
 describe('main page text and elements', () => {
@@ -21,7 +18,7 @@ describe('main page text and elements', () => {
         jest.useFakeTimers();
         render(
             <MemoryRouter>
-                <Main />
+                <Main/>
             </MemoryRouter>
         );
         const inputField = screen.getByTestId('input-field');
@@ -35,7 +32,7 @@ describe('main page text and elements', () => {
     test('Renders 10 tiles', () => {
         render(
             <MemoryRouter>
-                <Main />
+                <Main/>
             </MemoryRouter>
         );
         const tileArray = screen.getAllByTestId('tile');
@@ -45,7 +42,7 @@ describe('main page text and elements', () => {
     test('Renders score text', () => {
         render(
             <MemoryRouter>
-                <Main />
+                <Main/>
             </MemoryRouter>
         );
         const scoreText = screen.getByText(/score:/i);
@@ -55,7 +52,7 @@ describe('main page text and elements', () => {
     test('Renders reset button and text', () => {
         render(
             <MemoryRouter>
-                <Main />
+                <Main/>
             </MemoryRouter>
         );
         const resetButton = screen.getByTestId('reset-tiles-btn');
@@ -67,7 +64,7 @@ describe('main page text and elements', () => {
     test('Renders save button', () => {
         render(
             <MemoryRouter>
-                <Main />
+                <Main/>
             </MemoryRouter>
         );
         const saveScoreButton = screen.getByTestId('save-btn');
@@ -79,7 +76,7 @@ describe('main page text and elements', () => {
     test('Renders view top scores button', () => {
         render(
             <MemoryRouter>
-                <Main />
+                <Main/>
             </MemoryRouter>
         );
         const viewTopScoresButton = screen.getByTestId('view-top-scores-btn');
@@ -95,13 +92,13 @@ describe('input behaviour, logic and error text', () => {
         dictionaryAPI.checkIfValidWord.mockResolvedValue({ status: HTTPSTATUS.OK });
         render(
             <MemoryRouter>
-                <Main />
+                <Main/>
             </MemoryRouter>
         );
 
         // Simulate typing in input field and waits for timeout callback to execute before considering cycle as completed with act()
         act(() => {
-            fireEvent.change(screen.getByTestId('input-field'), { target: { value: 'example' }})
+            fireEvent.change(screen.getByTestId('input-field'), { target: { value: 'example' } })
         })
 
         await waitFor(() => expect(dictionaryAPI.checkIfValidWord).toHaveBeenCalledTimes(1));
@@ -114,12 +111,12 @@ describe('input behaviour, logic and error text', () => {
         dictionaryAPI.checkIfValidWord.mockResolvedValue({ status: HTTPSTATUS.OK });
         render(
             <MemoryRouter>
-                <Main />
+                <Main/>
             </MemoryRouter>
         );
 
         act(() => {
-            fireEvent.change(screen.getByTestId('input-field'), { target: { value: '' }})
+            fireEvent.change(screen.getByTestId('input-field'), { target: { value: '' } })
         })
 
         await waitFor(() => expect(dictionaryAPI.checkIfValidWord).not.toHaveBeenCalled());
@@ -130,12 +127,12 @@ describe('input behaviour, logic and error text', () => {
     test('sets isInvalidWord to false and score to 0 for input longer than 10 characters', async () => {
         render(
             <MemoryRouter>
-                <Main />
+                <Main/>
             </MemoryRouter>
         );
         const inputField = screen.getByTestId('input-field');
         act(() => {
-            fireEvent.change(inputField, { target: { value: '' }});
+            fireEvent.change(inputField, { target: { value: '' } });
         })
 
         // Wait for the debounce timeout
@@ -150,14 +147,14 @@ describe('input behaviour, logic and error text', () => {
         dictionaryAPI.checkIfValidWord.mockResolvedValue({ status: HTTPSTATUS.NOTFOUND });
         render(
             <MemoryRouter>
-                <Main />
+                <Main/>
             </MemoryRouter>
         );
 
         const inputField = screen.getByTestId('input-field');
         // Simulate typing in input field and waits for timeout callback to execute before considering cycle as completed with act()
         act(() => {
-            fireEvent.change(inputField, { target: { value: 'invalidw' }})
+            fireEvent.change(inputField, { target: { value: 'invalidw' } })
         })
 
         await waitFor(() => {
@@ -173,14 +170,14 @@ describe('input behaviour, logic and error text', () => {
         dictionaryAPI.checkIfValidWord.mockResolvedValue({ status: HTTPSTATUS.NOTFOUND });
         render(
             <MemoryRouter>
-                <Main />
+                <Main/>
             </MemoryRouter>
         );
 
         const inputField = screen.getByTestId('input-field');
         // Simulate typing in input field and waits for timeout callback to execute before considering cycle as completed with act()
         act(() => {
-            fireEvent.change(inputField, { target: { value: 'invalidw' }})
+            fireEvent.change(inputField, { target: { value: 'invalidw' } })
         })
 
         await waitFor(() => {
@@ -198,13 +195,13 @@ describe('scoring', () => {
         dictionaryAPI.checkIfValidWord.mockResolvedValue({ status: HTTPSTATUS.OK });
         render(
             <MemoryRouter>
-                <Main />
+                <Main/>
             </MemoryRouter>
         );
 
         // Simulate typing in input field and waits for timeout callback to execute before considering cycle as completed with act()
         act(() => {
-            fireEvent.change(screen.getByTestId('input-field'), { target: { value: '' }})
+            fireEvent.change(screen.getByTestId('input-field'), { target: { value: '' } })
         })
 
         await waitFor(() => {
@@ -219,13 +216,13 @@ describe('scoring', () => {
         dictionaryAPI.checkIfValidWord.mockResolvedValue({ status: HTTPSTATUS.NOTFOUND });
         render(
             <MemoryRouter>
-                <Main />
+                <Main/>
             </MemoryRouter>
         );
 
         // Simulate typing in input field and waits for timeout callback to execute before considering cycle as completed with act()
         act(() => {
-            fireEvent.change(screen.getByTestId('input-field'), { target: { value: 'kdjnkj' }})
+            fireEvent.change(screen.getByTestId('input-field'), { target: { value: 'kdjnkj' } })
         })
 
         await waitFor(() => {
@@ -240,13 +237,13 @@ describe('scoring', () => {
         dictionaryAPI.checkIfValidWord.mockResolvedValue({ status: HTTPSTATUS.OK });
         render(
             <MemoryRouter>
-                <Main />
+                <Main/>
             </MemoryRouter>
         );
 
         // Simulate typing in input field and waits for timeout callback to execute before considering cycle as completed with act()
         act(() => {
-            fireEvent.change(screen.getByTestId('input-field'), { target: { value: 'ambiguity' }})
+            fireEvent.change(screen.getByTestId('input-field'), { target: { value: 'ambiguity' } })
         })
 
         await waitFor(() => {
@@ -283,7 +280,7 @@ describe('button behaviours', () => {
         dictionaryAPI.checkIfValidWord.mockResolvedValue({ status: HTTPSTATUS.OK });
         render(
             <MemoryRouter>
-                <Main />
+                <Main/>
             </MemoryRouter>
         );
 
@@ -293,7 +290,7 @@ describe('button behaviours', () => {
 
         // Simulate typing in input field and waits for timeout callback to execute before considering cycle as completed with act()
         act(() => {
-            fireEvent.change(inputField, { target: { value: 'ambivalent' }})
+            fireEvent.change(inputField, { target: { value: 'ambivalent' } })
         })
 
         await waitFor(() => {
@@ -318,12 +315,12 @@ describe('button behaviours', () => {
 
         render(
             <MemoryRouter>
-                <Main />
+                <Main/>
             </MemoryRouter>
         );
 
         const inputField = screen.getByTestId('input-field');
-        fireEvent.change(inputField, { target: { value: 'ambivalent' }})
+        fireEvent.change(inputField, { target: { value: 'ambivalent' } })
 
         act(() => {
             jest.advanceTimersByTime(600);
@@ -357,18 +354,19 @@ describe('button behaviours', () => {
         scoresAPI.saveScore.mockRejectedValue(mockErrorResponse);
 
         const consoleSpy = jest.spyOn(console, 'log');
-        consoleSpy.mockImplementation(() => {});
+        consoleSpy.mockImplementation(() => {
+        });
 
         jest.useFakeTimers();
 
         render(
             <MemoryRouter>
-                <Main />
+                <Main/>
             </MemoryRouter>
         );
 
         const inputField = screen.getByTestId('input-field');
-        fireEvent.change(inputField, { target: { value: 'ambivalent' }})
+        fireEvent.change(inputField, { target: { value: 'ambivalent' } })
 
         act(() => {
             jest.advanceTimersByTime(600);
@@ -397,7 +395,6 @@ describe('button behaviours', () => {
                     <Route path='/top-scores' element={<TopScores/>}/>
                 </Routes>
             </MemoryRouter>
-
         );
 
         const viewTopScoresButton = screen.getByTestId('view-top-scores-btn');
