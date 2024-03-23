@@ -1,10 +1,11 @@
 import { Button, Card, Flex, Input, Typography } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { checkIfValidWord } from "../../apis/dictionaryAPI";
-import { ALPHABET_SCORE_MAP, HTTPSTATUS } from "../../constants";
+import { ALPHABET_SCORE_MAP, HTTPSTATUS, LABELS } from "../../constants";
 import PageWrapper from "../../components/PageWrapper";
 import { saveScore } from "../../apis/scoresAPI";
 import { useNavigate } from "react-router-dom";
+import Loader from "../Loader/Loader";
 
 const { Text } = Typography;
 
@@ -14,6 +15,8 @@ const Main = () => {
     const [value, setValue] = useState('');
     const [isScoreSaved, setIsScoreSaved] = useState(false);
     const [isInvalidWord, setIsInvalidWord] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+    const [isSaveScoresLoading, setIsSaveScoresLoading] = useState(false);
     const [score, setScore] = useState(0);
 
     useEffect(() => {
@@ -21,7 +24,9 @@ const Main = () => {
             // Send Axios request here
             if (value) {
                 if (value.length <= 10) {
+                    setIsLoading(true);
                     const response = await checkIfValidWord(value);
+                    setIsLoading(false);
                     const { status } = response;
                     if (status === HTTPSTATUS.NOTFOUND) {
                         setIsInvalidWord(true);
@@ -53,7 +58,6 @@ const Main = () => {
         alignItems: 'center',
     }
     const inputStyle = {
-        marginBottom: '10px',
         height: '50px'
     }
     const inputErrorStyle = {
@@ -84,68 +88,96 @@ const Main = () => {
         alignItems: 'center'
     }
 
-    const scoreTextStyle = {
+    const scoreAvailableTextStyle = {
         fontSize: '24px',
         margin: '20px 0px',
         fontWeight: 'bold',
         color: '#967BB6'
     }
 
+    const scoreUnavailableTextStyle = {
+        fontSize: '24px',
+        margin: '20px 0px',
+        fontWeight: 'bold',
+        color: '#000000'
+    }
+
+    // Handler functions
+    const handleResetOnClick = () => {
+        setValue('');
+        setScore(0);
+        setIsScoreSaved(false);
+        setIsInvalidWord(false);
+    }
+
+    const handleSaveOnClick = async () => {
+        if (value && !isInvalidWord) {
+            const score = calculateScore(value);
+            try {
+                setIsSaveScoresLoading(true);
+                await saveScore({ word: value, score })
+                setIsSaveScoresLoading(false);
+                setIsScoreSaved(true);
+                setTimeout(() => setIsScoreSaved(false), 3000);
+            } catch (e) {
+                console.log('error when calling save score api: ', e);
+            }
+        }
+    }
+
+    // Render functions
+    const renderCards = () => Array(10).fill().map((_, index) => (
+        <Card style={cardStyle} key={index} data-testid='tile'>
+            {value && value.charAt(index).toUpperCase()}
+        </Card>
+    ))
+
     return (
         <PageWrapper>
-            <Flex style={welcomeMessageStyle}>Welcome! Please type a word in the field below to begin!</Flex>
+            {isLoading && <Loader/>}
+            <Flex style={welcomeMessageStyle} data-testid='welcome-text'>
+                {LABELS.WELCOME_TEXT}
+            </Flex>
             <Flex style={tilesWrapperStyle}>
                 <Input
                     value={value}
                     maxLength={10}
                     style={isInvalidWord ? inputErrorStyle : inputStyle}
-                    placeholder={'Score will only be computed when you type a valid word'}
-                    onChange={e => setValue(e.target.value)}
+                    placeholder={LABELS.WORD_INPUT_PLACEHOLDER_TEXT}
+                    onChange={e => !isLoading && setValue(e.target.value)}
                     data-testid='input-field'
                 />
                 <Text type={'success'} style={scoreSavedTextStyle} data-testid='score-saved'>
-                    {isScoreSaved && `Your score has been saved!`}
+                    {isScoreSaved && LABELS.SCORE_SAVED_TEXT}
                 </Text>
                 <Text type={'danger'} style={invalidWordTextStyle} data-testid='invalid-word-error-text'>
-                    {isInvalidWord && `The word you typed is invalid, please try another word!`}
+                    {isInvalidWord && LABELS.WORD_INVALID_TEXT}
                 </Text>
                 <Flex gap={'small'}>
-                    {Array(10).fill().map((_, index) => (
-                        <Card style={cardStyle} key={index} data-testid='tile'>
-                            {value && value.charAt(index).toUpperCase()}
-                        </Card>
-                    ))}
+                    {renderCards()}
                 </Flex>
             </Flex>
 
             <Flex data-testid={'score'}>
-                <Text style={scoreTextStyle}>Score: {score && score || 'N/A'}</Text>
+                <Text
+                    style={score
+                        ? scoreAvailableTextStyle
+                        : scoreUnavailableTextStyle}
+                >
+                    Score: {score && score || 'N/A'}
+                </Text>
             </Flex>
             <Flex gap={'large'}>
                 <Button
-                    onClick={() => {
-                        setValue('');
-                        setScore(0);
-                        setIsScoreSaved(false);
-                        setIsInvalidWord(false);
-                    }}
+                    onClick={handleResetOnClick}
                     data-testid='reset-tiles-btn'
                     type="primary"
                     size={'large'}>
                     Reset Tiles
                 </Button>
-                <Button data-testid='save-btn' type="primary" size={'large'} onClick={async () => {
-                    if (value && !isInvalidWord) {
-                        const score = calculateScore(value);
-                        try {
-                            await saveScore({ word: value, score })
-                            setIsScoreSaved(true);
-                            setTimeout(() => setIsScoreSaved(false), 3000);
-                        } catch (e) {
-                            console.log('error when calling save score api: ', e);
-                        }
-                    }
-                }}>Save Score</Button>
+                <Button data-testid='save-btn' type="primary" size={'large'} loading={isSaveScoresLoading}
+                        onClick={handleSaveOnClick}>Save
+                    Score</Button>
                 <Button data-testid='view-top-scores-btn' type="primary" size={'large'}
                         onClick={() => navigate('/top-scores')}>View Top Scores</Button>
             </Flex>
