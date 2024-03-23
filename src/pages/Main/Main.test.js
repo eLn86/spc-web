@@ -14,6 +14,16 @@ jest.mock("../../apis/scoresAPI");
 
 jest.mock('axios');
 describe('main page text and elements', () => {
+    test('home page text', () => {
+        render(
+            <MemoryRouter>
+                <Main/>
+            </MemoryRouter>
+        );
+        const welcomeText = screen.getByText(/welcome! please type a word in the field below to begin!/i);
+        expect(welcomeText).toBeInTheDocument();
+    })
+
     test('Renders input field with max length 10', () => {
         jest.useFakeTimers();
         render(
