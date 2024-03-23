@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { getTopTenScores } from "../../apis/scoresAPI";
 import { LeftOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
+import { LABELS } from "../../constants";
 
 const { Text } = Typography;
 
@@ -120,7 +121,7 @@ const TopScores = () => {
     return (
         <PageWrapper>
             <Flex data-testid='top-scores-title' style={titleWrapperStyle}>
-                <Text style={topTenScoresTextStyle}>Top 10 Scores</Text>
+                <Text style={topTenScoresTextStyle}>{LABELS.TOP_TEN_SCORES_TITLE}</Text>
                 <Flex style={homeTextWrapperStyle}>
                     <Button type="default" data-testid='back-to-home-btn' icon={<LeftOutlined/>}
                             onClick={() => navigate('/')}>
