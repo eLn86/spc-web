@@ -1,7 +1,7 @@
 import { Button, Card, Flex, Input, Typography } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { checkIfValidWord } from "../../apis/dictionaryAPI";
-import { ALPHABET_SCORE_MAP, HTTPSTATUS, LABELS } from "../../constants";
+import { ALPHABET_SCORE_MAP, API_ERRORS, HTTPSTATUS, LABELS } from "../../constants";
 import PageWrapper from "../../components/PageWrapper";
 import { saveScore } from "../../apis/scoresAPI";
 import { useNavigate } from "react-router-dom";
@@ -15,6 +15,7 @@ const Main = () => {
     const [value, setValue] = useState('');
     const [isScoreSaved, setIsScoreSaved] = useState(false);
     const [isInvalidWord, setIsInvalidWord] = useState(false);
+    const [showWordExistsError, setShowWordExistsError] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
     const [isSaveScoresLoading, setIsSaveScoresLoading] = useState(false);
     const [score, setScore] = useState(0);
@@ -108,6 +109,7 @@ const Main = () => {
         setScore(0);
         setIsScoreSaved(false);
         setIsInvalidWord(false);
+        setShowWordExistsError(false);
     }
 
     const handleSaveOnClick = async () => {
@@ -120,7 +122,12 @@ const Main = () => {
                 setIsScoreSaved(true);
                 setTimeout(() => setIsScoreSaved(false), 3000);
             } catch (e) {
+                setIsSaveScoresLoading(false);
+                const { response: { status, data: {error: errorMessage }}} = e;
                 console.log('error when calling save score api: ', e);
+                if (status === HTTPSTATUS.CONFLICT && errorMessage === API_ERRORS.WORD_EXISTS) {
+                    setShowWordExistsError(true);
+                }
             }
         }
     }
@@ -144,7 +151,10 @@ const Main = () => {
                     maxLength={10}
                     style={isInvalidWord ? inputErrorStyle : inputStyle}
                     placeholder={LABELS.WORD_INPUT_PLACEHOLDER_TEXT}
-                    onChange={e => !isLoading && setValue(e.target.value)}
+                    onChange={e => {
+                        setShowWordExistsError(false);
+                        !isLoading && setValue(e.target.value)
+                    }}
                     data-testid='input-field'
                 />
                 <Text type={'success'} style={scoreSavedTextStyle} data-testid='score-saved'>
@@ -152,6 +162,7 @@ const Main = () => {
                 </Text>
                 <Text type={'danger'} style={invalidWordTextStyle} data-testid='invalid-word-error-text'>
                     {isInvalidWord && LABELS.WORD_INVALID_TEXT}
+                    {showWordExistsError && LABELS.WORD_ALREADY_EXISTS_TEXT}
                 </Text>
                 <Flex gap={'small'}>
                     {renderCards()}
