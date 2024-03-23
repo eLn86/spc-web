@@ -3,26 +3,33 @@ import React, { useEffect, useState } from 'react';
 import { checkIfValidWord } from "../../apis/dictionaryAPI";
 import { ALPHABET_SCORE_MAP, HTTPSTATUS } from "../../constants";
 import PageWrapper from "../../components/PageWrapper";
+import { saveScore } from "../../apis/scoresAPI";
+import { useNavigate } from "react-router-dom";
 
 const { Text } = Typography;
 
 const Main = () => {
+    const navigate = useNavigate();
+
     const [value, setValue] = useState('');
+    const [isScoreSaved, setIsScoreSaved] = useState(false);
     const [isInvalidWord, setIsInvalidWord] = useState(false);
     const [score, setScore] = useState(0);
 
     useEffect(() => {
         const delayDebounceFn = setTimeout(async () => {
             // Send Axios request here
-            if ((value && value.length <= 10)) {
-                const response = await checkIfValidWord(value);
-                const { status } = response;
-                if (status === HTTPSTATUS.NOTFOUND) {
-                    setIsInvalidWord(true);
-                    setScore(0);
-                } else {
-                    setIsInvalidWord(false);
-                    setScore(calculateScore(value));
+            if (value) {
+                if (value.length <= 10) {
+                    const response = await checkIfValidWord(value);
+                    const { status } = response;
+                    if (status === HTTPSTATUS.NOTFOUND) {
+                        setIsInvalidWord(true);
+                        setScore(0);
+                    } else {
+                        setIsInvalidWord(false);
+                        setScore(calculateScore(value));
+                    }
                 }
             } else {
                 setIsInvalidWord(false);
@@ -30,13 +37,11 @@ const Main = () => {
             }
         }, 500)
 
-        return () => clearTimeout(delayDebounceFn)
+        return () => clearTimeout(delayDebounceFn);
     }, [value])
 
-    const calculateScore = word => {
-        if (!word) return 0;
-        return word.split('').reduce((acc, letter) => acc + ALPHABET_SCORE_MAP[letter.toUpperCase()], 0);
-    }
+    const calculateScore = word => word.split('').reduce(
+        (acc, letter) => acc + ALPHABET_SCORE_MAP[letter.toUpperCase()], 0);
 
     const tilesWrapperStyle = {
         flexDirection: 'column',
@@ -50,6 +55,12 @@ const Main = () => {
         marginBottom: '10px',
         height: '50px',
         border: '1px solid red'
+    }
+    const scoreSavedTextStyle = {
+        height: '30px',
+        textAlign: 'left',
+        width: '100%',
+        fontSize: '18px'
     }
     const invalidWordTextStyle = {
         height: '30px',
@@ -86,6 +97,9 @@ const Main = () => {
                     onChange={e => setValue(e.target.value)}
                     data-testid='input-field'
                 />
+                <Text type={'success'} style={scoreSavedTextStyle} data-testid='score-saved'>
+                    {isScoreSaved && `Your score has been saved!`}
+                </Text>
                 <Text type={'danger'} style={invalidWordTextStyle} data-testid='invalid-word-error-text'>
                     {isInvalidWord && `The word you typed is invalid, please try another word!`}
                 </Text>
@@ -106,6 +120,7 @@ const Main = () => {
                     onClick={() => {
                         setValue('');
                         setScore(0);
+                        setIsScoreSaved(false);
                         setIsInvalidWord(false);
                     }}
                     data-testid='reset-tiles-btn'
@@ -113,8 +128,20 @@ const Main = () => {
                     size={'large'}>
                     Reset Tiles
                 </Button>
-                <Button data-testid='save-button' type="primary" size={'large'}>Save Score</Button>
-                <Button data-testid='view-topscores-button' type="primary" size={'large'}>View Top Scores</Button>
+                <Button data-testid='save-btn' type="primary" size={'large'} onClick={async () => {
+                    if (value && !isInvalidWord) {
+                        const score = calculateScore(value);
+                        try {
+                            await saveScore({ word: value, score })
+                            setIsScoreSaved(true);
+                            setTimeout(() => setIsScoreSaved(false), 3000);
+                        } catch (e) {
+                            console.log('error when calling save score api: ', e);
+                        }
+                    }
+                }}>Save Score</Button>
+                <Button data-testid='view-top-scores-btn' type="primary" size={'large'}
+                        onClick={() => navigate('/top-scores')}>View Top Scores</Button>
             </Flex>
         </PageWrapper>
     )
