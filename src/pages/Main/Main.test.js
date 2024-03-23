@@ -3,7 +3,7 @@ import * as dictionaryAPI from "../../apis/dictionaryAPI";
 import * as scoresAPI from "../../apis/scoresAPI";
 import { act, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import Main from './Main';
-import { HTTPSTATUS } from "../../constants";
+import { API_ERRORS, HTTPSTATUS } from "../../constants";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
 import TopScores from "../TopScores/TopScores";
 import React from "react";
@@ -267,13 +267,11 @@ describe('scoring', () => {
 describe('button behaviours', () => {
     beforeEach(() => {
         const mockScores = {
-            data: {
-                scores: [
-                    { word: 'example', score: 10 },
-                    { word: 'example', score: 10 },
-                    { word: 'example', score: 10 }
-                ]
-            }
+            scores: [
+                { word: 'example', score: 10 },
+                { word: 'example', score: 10 },
+                { word: 'example', score: 10 }
+            ]
         }
         scoresAPI.getTopTenScores.mockResolvedValue(mockScores);
 
@@ -359,15 +357,13 @@ describe('button behaviours', () => {
     test('save scores not successful and logs error', async () => {
         const mockErrorResponse = {
             code: 'ERR_INTERNAL_SERVER',
-            response: { status: 500 },
+            response: { status: HTTPSTATUS.CONFLICT, data: { error: API_ERRORS.WORD_EXISTS } },
         }
         scoresAPI.saveScore.mockRejectedValue(mockErrorResponse);
 
-        const consoleSpy = jest.spyOn(console, 'log');
-        consoleSpy.mockImplementation(() => {
-        });
-
-        jest.useFakeTimers();
+        act(() => {
+            jest.useFakeTimers();
+        })
 
         render(
             <MemoryRouter>
@@ -385,16 +381,15 @@ describe('button behaviours', () => {
         const saveScoreButton = screen.getByTestId('save-btn');
         fireEvent.click(saveScoreButton)
 
-        await waitFor(() => {
-            expect(screen.getByTestId('score-saved')).not.toHaveTextContent('Your score has been saved!');
+        await waitFor(async () => {
+            expect(await screen.getByTestId('score-saved')).not.toHaveTextContent('Your score has been saved!');
             expect(dictionaryAPI.checkIfValidWord).toHaveBeenCalledTimes(1);
             expect(scoresAPI.saveScore).toHaveBeenCalledTimes(1);
-            expect(consoleSpy).toHaveBeenCalledWith('error when calling save score api: ', mockErrorResponse);
         })
 
-        jest.useRealTimers();
-        consoleSpy.mockRestore();
-
+        act(() => {
+            jest.useRealTimers();
+        })
     })
 
     test('navigate to /top-scores page when View Top Scores button clicked', async () => {

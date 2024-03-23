@@ -2,10 +2,11 @@ import * as scoresAPI from "../../apis/scoresAPI";
 import { act, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import TopScores from "./TopScores";
 import '../../setupDomTests';
-import { LABELS, TABLE_ROLES } from "../../constants";
+import { API_ERRORS, HTTPSTATUS, LABELS, TABLE_ROLES } from "../../constants";
 import React from "react";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
 import Main from "../Main/Main";
+import axios from "axios";
 
 jest.mock("../../apis/scoresAPI");
 
@@ -13,13 +14,11 @@ jest.mock('axios');
 
 beforeEach(async () => {
     const mockScores = {
-        data: {
-            scores: [
-                { word: 'example', score: 10 },
-                { word: 'example', score: 10 },
-                { word: 'magnum', score: 8 }
-            ]
-        }
+        scores: [
+            { word: 'example', score: 10 },
+            { word: 'example', score: 10 },
+            { word: 'magnum', score: 8 }
+        ]
     };
     scoresAPI.getTopTenScores.mockResolvedValue(mockScores);
 });
@@ -65,7 +64,9 @@ describe('API behavior and resultant UI', () => {
                 <TopScores/>
             </MemoryRouter>
         );
-        expect(await screen.findByText('magnum')).toBeVisible();
+        // Use findByText to wait for the element to appear. No need for an additional waitFor.
+        const magnumText = await screen.findByText('magnum');
+        expect(magnumText).toBeVisible();
     })
 
     test('remaining number of slots to be 10 - apiData.length (length is mocked to be 3)', async () => {
@@ -80,11 +81,7 @@ describe('API behavior and resultant UI', () => {
     })
 
     test('render 10 slots with This slot has yet to be filled! when no api.data', async () => {
-        const mockScores = {
-            data: {
-                scores: []
-            }
-        };
+        const mockScores = { scores: [] };
         scoresAPI.getTopTenScores.mockResolvedValue(mockScores);
         render(
             <MemoryRouter>
@@ -94,6 +91,30 @@ describe('API behavior and resultant UI', () => {
         await waitFor(async () => {
             expect(await screen.findAllByText('This slot has yet to be filled!')).toHaveLength(10);
         });
+    })
+
+    test('throws error when getTopTenScores fails', async () => {
+        const mockErrorResponse = {
+            code: 'ERR_INTERNAL_SERVER',
+            response: { status: HTTPSTATUS.INTERNAL_SERVER_ERROR, data: { error: API_ERRORS.INTERNAL_SERVER_ERROR } },
+        }
+        axios.get = scoresAPI.getTopTenScores.mockRejectedValue(mockErrorResponse);
+
+        const consoleSpy = jest.spyOn(console, 'log');
+        consoleSpy.mockImplementation(() => {});
+
+        render(
+            <MemoryRouter>
+                <TopScores/>
+            </MemoryRouter>
+        );
+
+        await waitFor(() => {
+            expect(axios.get).toHaveBeenCalledTimes(1);
+            expect(consoleSpy).toHaveBeenCalledWith("error when getting top ten scores: ", mockErrorResponse);
+        });
+
+        consoleSpy.mockRestore();
     })
 
     test('navigate to home page from top scores page when Back to Home button is clicked', async () => {

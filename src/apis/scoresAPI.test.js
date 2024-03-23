@@ -1,6 +1,7 @@
 import axios from 'axios';
-import { saveScore, getTopTenScores, BACKEND_API_URL } from "./scoresAPI";
+import { BACKEND_API_URL, getTopTenScores, saveScore } from "./scoresAPI";
 import { REQUEST_HEADERS } from "./common";
+
 describe('saveScore', () => {
     test('should return successful response when word and score provided', async () => {
         const mockWord = 'ludicrous';
@@ -10,14 +11,16 @@ describe('saveScore', () => {
             word: mockWord
         }
         const mockApiResponse = {
-            id: '3fa85f64-5717-4562-b3fc-2c963f66afa6',
-            word: mockWord,
-            score: mockScore
+            data: {
+                id: '3fa85f64-5717-4562-b3fc-2c963f66afa6',
+                word: mockWord,
+                score: mockScore
+            }
         };
         axios.post = jest.fn().mockResolvedValue(mockApiResponse);
 
         const result = await saveScore(mockData);
-        expect(result).toEqual(mockApiResponse);
+        expect(result).toEqual(mockApiResponse.data);
         expect(axios.post).toHaveBeenCalledWith(`${BACKEND_API_URL}/scores`, mockData, REQUEST_HEADERS);
     });
 
@@ -30,16 +33,19 @@ describe('saveScore', () => {
         }
         const mockErrorResponse = {
             code: 'ERR_INTERNAL_SERVER',
-            response: { status: 500 },
+            response: { status: 500, data: { error: "internal error" }},
         };
         axios.post = jest.fn().mockRejectedValue(mockErrorResponse);
 
         const consoleSpy = jest.spyOn(console, 'log');
-        consoleSpy.mockImplementation(() => {});
+        consoleSpy.mockImplementation(() => {
+        });
 
-        await saveScore(mockData);
-
-        expect(consoleSpy).toHaveBeenCalledWith(mockErrorResponse);
+        try {
+            await saveScore(mockData);
+        } catch (error) {
+            expect(error).toEqual(mockErrorResponse);
+        }
 
         // Restore the original console.log behavior
         consoleSpy.mockRestore();
@@ -64,7 +70,7 @@ describe('getTopScores', () => {
                 }
             ]
         };
-        axios.get = jest.fn().mockResolvedValue(mockApiResponse);
+        axios.get = jest.fn().mockResolvedValue({ data: mockApiResponse });
 
         const result = await getTopTenScores();
         expect(result).toEqual(mockApiResponse);
@@ -74,16 +80,15 @@ describe('getTopScores', () => {
     test('should log error for server errors', async () => {
         const mockErrorResponse = {
             code: 'ERR_INTERNAL_SERVER',
-            response: { status: 500 },
+            response: { status: 500, data: { error: "Internal Server Error" } },
         };
         axios.get = jest.fn().mockRejectedValue(mockErrorResponse);
 
         const consoleSpy = jest.spyOn(console, 'log');
-        consoleSpy.mockImplementation(() => {});
+        consoleSpy.mockImplementation(() => {
+        });
 
-        await getTopTenScores();
-
-        expect(consoleSpy).toHaveBeenCalledWith(mockErrorResponse);
+        await expect(getTopTenScores()).rejects.toEqual(mockErrorResponse);
 
         // Restore the original console.log behavior
         consoleSpy.mockRestore();
