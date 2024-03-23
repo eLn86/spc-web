@@ -29,7 +29,14 @@ export const ALPHABET_SCORE_MAP = {
 
 export const HTTPSTATUS = {
     OK: 200,
-    NOTFOUND: 404
+    NOTFOUND: 404,
+    CONFLICT: 409,
+    INTERNAL_SERVER_ERROR: 500
+}
+
+export const API_ERRORS = {
+    WORD_EXISTS: 'Word already exists, save not successful.',
+    INTERNAL_SERVER_ERROR: 'Internal Server Error.'
 }
 
 export const TABLE_ROLES = {
@@ -40,6 +47,7 @@ export const LABELS = {
     WELCOME_TEXT: 'Welcome! Please type a word in the field below to begin!',
     WORD_INPUT_PLACEHOLDER_TEXT: 'Score will only be computed when you type a valid word',
     SCORE_SAVED_TEXT: 'Your score has been saved!',
+    WORD_ALREADY_EXISTS_TEXT: `Sorry, your word already exists in the database and we won't save duplicates :(`,
     WORD_INVALID_TEXT: 'The word you typed is invalid, please try another word!',
     TOP_TEN_SCORES_TITLE: 'Top 10 Scores'
 }
