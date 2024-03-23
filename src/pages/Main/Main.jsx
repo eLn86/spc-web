@@ -43,6 +43,11 @@ const Main = () => {
     const calculateScore = word => word.split('').reduce(
         (acc, letter) => acc + ALPHABET_SCORE_MAP[letter.toUpperCase()], 0);
 
+    const welcomeMessageStyle = {
+        fontFamily: 'Comic Sans MS',
+        fontSize: '24px',
+        fontWeight: 'bolder'
+    }
     const tilesWrapperStyle = {
         flexDirection: 'column',
         alignItems: 'center',
@@ -88,6 +93,7 @@ const Main = () => {
 
     return (
         <PageWrapper>
+            <Flex style={welcomeMessageStyle}>Welcome! Please type a word in the field below to begin!</Flex>
             <Flex style={tilesWrapperStyle}>
                 <Input
                     value={value}
