@@ -3,7 +3,7 @@ import { checkIfValidWord, DICTIONARY_API_URL } from "./dictionaryAPI";
 describe('checkIfValidWord', () => {
     test('should return response for a valid word', async () => {
         const mockWord = 'test';
-        const mockApiResponse = { data: { } };
+        const mockApiResponse = { status: 200 };
         axios.get = jest.fn().mockResolvedValue(mockApiResponse);
 
         const result = await checkIfValidWord(mockWord);
