@@ -14,12 +14,16 @@ const TopScores = () => {
 
     useEffect(() => {
         (async () => {
-            const response = await getTopTenScores();
-            const { data: { scores: topTenScores } } = response;
-            if (topTenScores.length === 0) {
-                setScores(null);
-            } else {
-                setScores(topTenScores);
+            try {
+                const response = await getTopTenScores();
+                const { scores: topTenScores } = response;
+                if (topTenScores && topTenScores.length === 0) {
+                    setScores(null);
+                } else {
+                    setScores(topTenScores);
+                }
+            } catch(e) {
+                console.log('error when getting top ten scores: ', e);
             }
         })();
     }, [])
