@@ -1,9 +1,8 @@
 import './App.css';
 import { Flex, Layout } from 'antd';
 import Main from "./pages/Main/Main";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import React from "react";
-import StarsAnimation from "./components/StarsAnimation/StarsAnimation";
 import TopScores from "./pages/TopScores/TopScores";
 
 const { Header, Footer, Content } = Layout;
@@ -46,7 +45,6 @@ const App = () => {
     };
     return (
         <>
-            <StarsAnimation/>
             <Flex wrap="wrap">
                 <Layout style={layoutStyle}>
                     <Header style={headerStyle}>Scrabble Points Calculator Deluxe</Header>
