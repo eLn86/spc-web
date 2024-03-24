@@ -25,7 +25,7 @@ Please adhere to the package versions below (Prerequisites) to avoid any issues 
 
 - Node.js v19.0.0
 - npm v8.19.2
-- yarn 4.1.1 (with corepack enabled)
+- yarn 4.1.1 (with Corepack enabled, shipped default with Nodejs)
 
 ### Installation
 
@@ -38,6 +38,14 @@ git clone https://github.com/eLn86/spc-backend.git
 ```bash
 cd spc-web
 ```
+3. Ensure corepack is enabled:
+```bash
+corepack enable
+```
+4. Set yarn version:
+```bash
+yarn set version 4.1.1
+```
 3. Install dependencies:
 ```bash
 yarn install
@@ -46,7 +54,9 @@ yarn install
 ```bash
 yarn start
 ```
-The application should now be running on http://localhost:3000.
+The application should now be running on http://localhost:3000. As API calls are made the moment you type a letter, 
+please ensure that the backend is running first. You can get it up by following the instructions here:
+https://github.com/eLn86/spc-backend
 
 ## Running Tests
 I am using Jest for unit tests. You can run the tests via the following command:
