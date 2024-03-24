@@ -65,6 +65,13 @@ I am using Jest for unit tests. You can run the tests via the following command:
 yarn test
 ```
 
+For test coverage, you can run:
+
+```bash
+yarn test --coverage
+```
+
+
 ## Built With
 - React JS
 - Axios for API calls
